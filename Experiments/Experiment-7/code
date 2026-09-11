@@ -1,0 +1,26 @@
+DO $$
+DECLARE
+    emp_cursor CURSOR FOR SELECT emp_id, salary FROM employee;
+    v_emp_id     employee.emp_id%TYPE;
+    v_salary     employee.salary%TYPE;
+BEGIN
+    OPEN emp_cursor;
+    LOOP
+        FETCH emp_cursor INTO v_emp_id, v_salary;
+        EXIT WHEN NOT FOUND;
+
+        IF v_salary = 0 THEN
+            RAISE EXCEPTION 'Salary is zero. Increment not possible.';
+        END IF;
+
+        UPDATE employee
+        SET salary = salary * 1.10
+        WHERE emp_id = v_emp_id;
+
+    END LOOP;
+    CLOSE emp_cursor;
+
+EXCEPTION
+    WHEN OTHERS THEN
+        RAISE NOTICE '%', SQLERRM;
+END $$;
