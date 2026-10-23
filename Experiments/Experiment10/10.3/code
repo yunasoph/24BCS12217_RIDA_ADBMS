@@ -1,0 +1,1 @@
+select f_name, f_cost, f_type from food as f join ratings as r on f.f_id=r.f_id and r.f_rating>=4;
